@@ -72,27 +72,25 @@
     </select>
     
     <select id="sampleDAO.selectSampleList" parameterClass="searchVO" resultClass="egovMap">
-			SELECT
-			    *
-			FROM
-			    (
-			        SELECT
-			            A.*,
-			            ROWNUM AS RNUM,
-			            COUNT(*) OVER() AS TOTCNT
-			        FROM
-			            (
-			                SELECT
-			                    *
-			                FROM
-			                    SAMPLE
-			                ORDER BY
-			                    ID asc
-			
-			            ) A
-			    )
-			WHERE
-			    <![CDATA[ RNUM > #firstIndex# AND RNUM <= #lastIndex# ]]>
+		SELECT * FROM
+		    (
+		        SELECT
+		            A.*,
+		            ROWNUM AS RNUM,
+		            COUNT(*) OVER() AS TOTCNT
+		        FROM
+		            (
+		                SELECT
+		                    *
+		                FROM
+		                    SAMPLE
+		                ORDER BY
+		                    ID asc
+		
+		            ) A
+		    )
+		WHERE
+		    <![CDATA[ RNUM > #firstIndex# AND RNUM <= #lastIndex# ]]>
 			
 	</select>
 	
