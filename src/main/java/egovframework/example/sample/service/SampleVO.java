@@ -57,7 +57,16 @@ public class SampleVO extends SampleDefaultVO {
 	private int status;
 	private Date est_end_date;
 	private String delYn;
+	private String chkVal2;
 	
+	
+	
+	public String getChkVal2() {
+		return chkVal2;
+	}
+	public void setChkVal2(String chkVal2) {
+		this.chkVal2 = chkVal2;
+	}
 	public String getId() {
 		return id;
 	}

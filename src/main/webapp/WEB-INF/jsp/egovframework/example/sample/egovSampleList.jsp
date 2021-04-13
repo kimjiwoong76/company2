@@ -25,8 +25,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><spring:message code="title.sample" /></title>
     <link type="text/css" rel="stylesheet" href="<c:url value='/css/egovframework/sample.css'/>"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javaScript" language="javascript" defer="defer">
         <!--
+        
+       
+       
+	    
+
+        
+        
+        function splitFunction(value){
+       		var arrSplitTrans = value.split(",");
+           	return arrSplitTrans;	
+        }
+        
+        /* pagination 페이지 링크 function */
+        function fn_egov_link_page(pageNo){
+        	document.listForm.searchKeyword.value = '';
+        	document.listForm.pageIndex.value = pageNo;
+        	document.listForm.action = "<c:url value='/egovSampleList.do'/>";
+           	document.listForm.submit();
+        }
+        
         /* 글 수정 화면 function */
         function fn_egov_select(id) {
         	document.listForm.selectedId.value = id;
@@ -49,47 +70,17 @@
            	document.listForm.submit();
         }
         
-        /* pagination 페이지 링크 function */
-        function fn_egov_link_page(pageNo){
-        	document.listForm.searchKeyword.value = '';
-        	document.listForm.pageIndex.value = pageNo;
-        	document.listForm.action = "<c:url value='/egovSampleList.do'/>";
-           	document.listForm.submit();
-        }
-        /* 전체 선택 checkbox 클릭 */
-        function fn_ego_allCk(objCheck){
-	    	var checks = document.getElementsByName('selectItem');
-	    	for( var i = 0; i < checks.length; i++ ){
-		       checks[i].checked = objCheck;
-	    	}
-        }
-		/* 선택된 게시물을  삭제하기 */
-        function fn_ego_selct_delete(){ //
-			var elements = document.getElementsByName('selectItem');
-        	var cnt = 0;
-        	console.log(elements);
-        	for(var i=0; i<elements.length; i++){
-        		if(elements[i].checked == true){
-        			cnt++;
-        			console.log(cnt);
-        		}
-        	}
-        	if(cnt > 0){
-				let cf = confirm('정말로 삭제 하시겠습니까?');
-				if(cf == true){
-					listForm.action = "<c:url value='/deleteSampleAll.do' />";
-		       		listForm.submit();		
-				}
-        	} else {
-        		alert('선택한 내용이 없습니다');
-        		return false;
-        	}
-        }        
+
+
+        
+        
+
+
         -->
     </script>
 </head>
 
-<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
+<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;" onload="javascript:checkIndex();">
     <form:form commandName="searchVO" id="listForm" name="listForm" method="post">
         <input type="hidden" name="selectedId" />
         <div id="content_pop">
@@ -146,7 +137,7 @@
         			<c:forEach var="result" items="${resultList}" varStatus="status">
             			<tr>
             				<td align="center" class="listtd" style="vertical-align:middle;">
-            					<input type="checkbox" name="selectItem" value="<c:out value="${result.id}"/>">
+            					<input type="checkbox" name="selectItem"  value="<c:out value="${result.id}"/>"  />
             				</td>
 							<td align="center" class="listtd"><c:out value="${paginationInfo.totalRecordCount+1 - ((paginationInfo.currentPageNo-1) * searchVO.pageSize + status.count)}"/></td>
             				<td align="center" class="listtd"><a href="javascript:fn_egov_select('<c:out value="${result.id}"/>')"><c:out value="${result.id}"/></a></td>
@@ -169,7 +160,6 @@
 		        		<form:hidden path="pageIndex" />
 	        		</c:otherwise>
         		</c:choose>
-        		<input type="hidden" value="[]" />
         	</div>
         	<div id="sysbtn">
         	  <ul>
@@ -188,6 +178,146 @@
               </ul>
         	</div>
         </div>
+        <input type="hidden" id="chkVal" name="chkVal" value="${param.chkVal}" />
+        <input type="hidden" id="chkVal2" name="chkVal2" />
     </form:form>
+    <script>
+    
+    
+    
+    
+    function checkTest(){
+		$("input[name=selectItem]:checked").each(function(index, item){
+    		if(index > 8){
+    			console.log("==== 실행 ====");
+    			$("#selectAll").prop("checked", true);
+    		}
+    	});
+	}
+    /* 전체 선택 checkbox 클릭 */
+    function fn_ego_allCk(objCheck){
+    	var all = document.getElementById("selectAll");
+    	var checks = document.getElementsByName('selectItem');
+    	console.log("objCheck 값 = " + objCheck);
+    	for( var i = 0; i < checks.length; i++ ){
+    		console.log("checks 값 = " + checks[i].checked);
+    		if(checks[i].checked == objCheck){
+    			continue;
+    		}
+	       checks[i].checked = objCheck;
+	       checkboxArr(checks[i]);
+    	}
+    }
+    
+    function checkIndex(){
+    	if(!$("#chkVal").val()){
+    		$("#chkVal").addClass("on");	
+    	} else {
+    		var chkArr = $("#chkVal").val();
+        	chkArr = chkArr.split(',');
+        	var chkCnt = chkArr.length;
+        	for(var i=0; i<chkCnt; i++){
+       		  $('input:checkbox[name=selectItem]').each(function(){
+       		    if(this.value == chkArr[i]){
+       		    	this.checked = true;
+       		    }
+       		  });
+       		}
+        	for(var i=0; i<chkArr.length; i++){
+        		checkArr.push(chkArr[i]);	
+        	}
+    	}
+    	checkTest();
+    	
+    	
+//     	if($("#chkVal").hasClass("on")){
+//     		document.listForm.chkVal.value = checkArr;
+//     	}
+    	
+    }
+    
+    var checkArr = [];     // 배열 생성 및 초기화
+    var hiddenItem = document.getElementById("chkVal");
+    function checkboxArr(item) {
+        var itemVal = item.value;
+        var itemCheck = item.checked;
+//         console.log("히든 선택값 : "+itemVal); 
+//         console.log("선택여부 : "+itemCheck);
+        // check true 
+        if(itemCheck){ 
+//         	console.log("check"); 
+        	checkArr.push(itemVal);   
+        	// check false 
+        	
+        } else {
+        	checkArr.splice(checkArr.indexOf(itemVal), 1); // check value filter 배열내용 삭제
+        	if(checkArr.length == 0){
+        		checkArr = [];
+        	}
+    	}
+        checkArr  = checkArr.filter(function(item) {
+   		  return item !== null && item !== undefined && item !== '';
+   		});
+        console.log(checkArr);
+        if($("#chkVal").hasClass("on")){
+        	var chkData = $.trim($("#chkVal").val());
+        	var checkArrMore = splitFunction(chkData);
+    		for(let i=0; i<checkArrMore.length; i++){
+        		checkArr.push(checkArrMore[i]);
+        	}
+    		$("#chkVal").removeClass("on");
+    		hiddenItem.value = checkArr;
+        }
+        hiddenItem.value = checkArr;
+    }
+    
+    
+    /* 중복값 제거 함수  */
+    
+    function deleteArr(){
+    	$('input:checkbox[name=selectItem]').each(function(){
+    		checkArr.splice(checkArr.indexOf(this.value), 1); // check value filter 배열내용 삭제
+        	if(checkArr.length == 0){
+        		checkArr = [];
+        	}
+		});
+    }
+    
+	/* 선택된 게시물을  삭제하기 */
+    function fn_ego_selct_delete(){ //
+//		var elements = document.getElementsByName('selectItem');
+//     	var elements = document.getElementById("chkVal").value = checkArr;
+//     	console.log("히든 값 출력 " + checkArr);
+    	var elements = checkArr;
+//     	var elementsArr = elements.split(",");
+    	var cnt = 0;
+    	for(var i=0; i<elements.length; i++){
+   			cnt++;
+    	}
+    	if(cnt > 0){
+			let cf = confirm('정말로 삭제 하시겠습니까?');
+			if(cf == true){
+				hiddenItem.value = '';	
+				document.listForm.chkVal2.value = elements;
+				listForm.action = "<c:url value='/deleteSampleAll.do' />";
+	       		listForm.submit();		
+			}
+    	} else {
+   			alert('선택한 내용이 없습니다');
+       		return false;	
+    	}
+    }    
+	
+	
+	
+	// checkbox 실행 
+	$(function(){
+		$("input[name=selectItem]").on("change", function(){
+			checkboxArr(this);
+			checkTest();
+		});
+	});
+	
+    </script>
 </body>
 </html>

@@ -15,10 +15,13 @@
  */
 package egovframework.example.sample.web;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -81,7 +84,9 @@ public class EgovSampleController {
 	 * @exception Exception
 	 */
 	@RequestMapping(value = "/egovSampleList.do")
-	public String selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model) throws Exception {
+	public String selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception {
+		
+		
 
 		/** EgovPropertyService.sample */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
@@ -91,18 +96,10 @@ public class EgovSampleController {
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
-//		System.out.println("--paginationInfo.setRecordCountPerPage(searchVO.getPageUnit())--");
-//		System.out.println(paginationInfo.getRecordCountPerPage());
 		paginationInfo.setPageSize(searchVO.getPageSize());
-//		System.out.println("--paginationInfo.setPageSize(searchVO.getPageSize()--");
-//		System.out.println(paginationInfo.getPageSize());
 
 		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex() + 1);
-//		System.out.println("--searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex())--");
-//		System.out.println(searchVO.getFirstIndex());
 		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-//		System.out.println("--searchVO.setLastIndex(paginationInfo.getLastRecordIndex());--");
-//		System.out.println(searchVO.getLastIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 		
 		
@@ -130,6 +127,15 @@ public class EgovSampleController {
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 
+//		ArrayList<String> arrayList = new ArrayList<>();
+//		
+//		for(String data : sampleVO.getChkVal()) {
+//			if(!arrayList.contains(data)) {
+//				arrayList.add(data);
+//			}
+//		}
+//		System.out.println("중복 제거 리스트 값 = " + arrayList);
+		
 		return "sample/egovSampleList";
 	}
 
@@ -251,8 +257,15 @@ public class EgovSampleController {
 	@RequestMapping("/deleteSampleAll.do")
 	public String deleteSampleAll(SampleVO sampleVO, @ModelAttribute("searchVO") SampleDefaultVO searchVO, SessionStatus status) {
 		try {
+			System.out.println("====================");
+			String arr = sampleVO.getChkVal2();
+			String[] arrs = arr.split(",");
+			for(int i=0; i<arrs.length; i++) {
+				System.out.println(arrs[i]);
+			}
+			System.out.println("====================");
 			HashMap<String, Object> hm = new HashMap<String, Object>();
-			hm.put("selectItem", sampleVO.getSelectItem());
+			hm.put("chkVal2", arrs);
 			sampleService.deleteSample2(hm);
 		}catch (Exception e) {
 			logger.info(e);

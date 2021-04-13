@@ -54,9 +54,9 @@
 		<![CDATA[
 			DELETE FROM SAMPLE WHERE ID
 		]]>
-		<isNotEmpty property="selectItem">
-			<iterate prepend="IN" open="(" close=")" conjunction="," property="selectItem">
-			 #selectItem[]#
+		<isNotEmpty property="chkVal2">
+			<iterate prepend="IN" open="(" close=")" conjunction="," property="chkVal2">
+			 #chkVal2[]#
 			</iterate>
 		</isNotEmpty>
 	</delete>
