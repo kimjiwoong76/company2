@@ -41,6 +41,7 @@ import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import oracle.net.aso.m;
 
 /**
  * @Class Name : EgovSampleController.java
@@ -104,11 +105,11 @@ public class EgovSampleController {
 		
 		
 		/* searchVO 와 paginationInfo 정보 맞춤 */
-//		searchVO.setPageIndex(paginationInfo.getCurrentPageNo());
-//		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
-//		
-//		System.out.println("searchVO SearchCondition = " + searchVO.getSearchCondition());
-//		System.out.println("=======searchVO SearchKeyword = " + searchVO.getSearchKeyword());
+		searchVO.setPageIndex(paginationInfo.getCurrentPageNo());
+		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
+		
+		System.out.println("searchVO SearchCondition = " + searchVO.getSearchCondition());
+		System.out.println("=======searchVO SearchKeyword = " + searchVO.getSearchKeyword());
 //		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
 		
 		

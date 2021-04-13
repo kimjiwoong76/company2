@@ -42,7 +42,6 @@
         
         /* pagination 페이지 링크 function */
         function fn_egov_link_page(pageNo){
-        	document.listForm.searchKeyword.value = '';
         	document.listForm.pageIndex.value = pageNo;
         	document.listForm.action = "<c:url value='/egovSampleList.do'/>";
            	document.listForm.submit();
