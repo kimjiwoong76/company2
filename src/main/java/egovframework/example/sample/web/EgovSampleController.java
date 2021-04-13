@@ -104,19 +104,14 @@ public class EgovSampleController {
 		
 		
 		/* searchVO 와 paginationInfo 정보 맞춤 */
-		searchVO.setPageIndex(paginationInfo.getCurrentPageNo());
-		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
+//		searchVO.setPageIndex(paginationInfo.getCurrentPageNo());
+//		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
+//		
+//		System.out.println("searchVO SearchCondition = " + searchVO.getSearchCondition());
+//		System.out.println("=======searchVO SearchKeyword = " + searchVO.getSearchKeyword());
+//		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
 		
-		System.out.println("searchVO SearchCondition = " + searchVO.getSearchCondition());
-		System.out.println("=======searchVO SearchKeyword = " + searchVO.getSearchKeyword());
-		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
-		System.out.println(check);
-		if(check) {
-			System.out.println("=================여기 탑니다============================");
-			System.out.println(searchVO.getSearchKeyword());
-			System.out.println("=================여기 탑니다============================");
-//			searchVO.setPageIndex(1);
-		}
+		
 		
 		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
 		
@@ -127,15 +122,7 @@ public class EgovSampleController {
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 
-//		ArrayList<String> arrayList = new ArrayList<>();
-//		
-//		for(String data : sampleVO.getChkVal()) {
-//			if(!arrayList.contains(data)) {
-//				arrayList.add(data);
-//			}
-//		}
-//		System.out.println("중복 제거 리스트 값 = " + arrayList);
-		
+
 		return "sample/egovSampleList";
 	}
 

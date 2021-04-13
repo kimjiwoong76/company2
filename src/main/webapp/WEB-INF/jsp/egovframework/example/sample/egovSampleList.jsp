@@ -63,9 +63,9 @@
         
         /* 글 목록 화면 function */
         function fn_egov_selectList() {
-        	if(document.listForm.searchKeyword.value != ''){
-        		document.listForm.pageIndex.value = 1;	
-        	}
+//         	if(document.listForm.searchKeyword.value != ''){
+//         		document.listForm.pageIndex.value = 1;	
+//         	}
         	document.listForm.action = "<c:url value='/egovSampleList.do'/>";
            	document.listForm.submit();
         }
@@ -96,8 +96,8 @@
         			<li>
         			    <label for="searchCondition" style="visibility:hidden;"><spring:message code="search.choose" /></label>
         				<form:select path="searchCondition" cssClass="use">
-        					<form:option value="1" label="Name" />
-        					<form:option value="0" label="ID" />
+        					<form:option value="1" label="카테고리명" />
+        					<form:option value="0" label="설명" />
         				</form:select>
         			</li>
         			<li><label for="searchKeyword" style="visibility:hidden;display:none;"><spring:message code="search.keyword" /></label>
@@ -120,8 +120,8 @@
         				<col width="40" />
         				<col width="40"/>
         				<col width="100"/>
-        				<col width="250"/>
-        				<col width="80"/>
+        				<col width="120"/>
+        				<col width="50"/>
         				<col width="?"/>
         				<col width="60"/>
         			</colgroup>
@@ -141,7 +141,7 @@
             				</td>
 							<td align="center" class="listtd"><c:out value="${paginationInfo.totalRecordCount+1 - ((paginationInfo.currentPageNo-1) * searchVO.pageSize + status.count)}"/></td>
             				<td align="center" class="listtd"><a href="javascript:fn_egov_select('<c:out value="${result.id}"/>')"><c:out value="${result.id}"/></a></td>
-            				<td align="left" class="listtd"><c:out value="${result.name}"/>&nbsp;</td>
+            				<td align="center" class="listtd"><c:out value="${result.name}"/>&nbsp;</td>
             				<td align="center" class="listtd"><c:out value="${result.useYn}"/>&nbsp;</td>
             				<td align="center" class="listtd"><c:out value="${result.description}"/>&nbsp;</td>
             				<td align="center" class="listtd"><c:out value="${result.regUser}"/>&nbsp;</td>
@@ -186,6 +186,7 @@
     
     
     
+    // 셀렉트 갯수가 9개 이상이면(전부체크하면) 전체선택 체크박스에 checked 표시
     function checkTest(){
 		$("input[name=selectItem]:checked").each(function(index, item){
     		if(index > 8){
@@ -194,7 +195,10 @@
     		}
     	});
 	}
+    
     /* 전체 선택 checkbox 클릭 */
+    
+    // 전체 선택시 현재 체크된 것이 있다면 건너뛰고 값 담기
     function fn_ego_allCk(objCheck){
     	var all = document.getElementById("selectAll");
     	var checks = document.getElementsByName('selectItem');
@@ -209,6 +213,7 @@
     	}
     }
     
+    // 페이지 불러올 시 hidden에 클래스 추가 배열에 담긴 값에 따른 check표시
     function checkIndex(){
     	if(!$("#chkVal").val()){
     		$("#chkVal").addClass("on");	
@@ -228,14 +233,10 @@
         	}
     	}
     	checkTest();
-    	
-    	
-//     	if($("#chkVal").hasClass("on")){
-//     		document.listForm.chkVal.value = checkArr;
-//     	}
-    	
     }
     
+    // 가장 중요한 역활
+    // checkbox 선택에 따른 기능 작성
     var checkArr = [];     // 배열 생성 및 초기화
     var hiddenItem = document.getElementById("chkVal");
     function checkboxArr(item) {
@@ -273,7 +274,6 @@
     
     
     /* 중복값 제거 함수  */
-    
     function deleteArr(){
     	$('input:checkbox[name=selectItem]').each(function(){
     		checkArr.splice(checkArr.indexOf(this.value), 1); // check value filter 배열내용 삭제
@@ -285,11 +285,8 @@
     
 	/* 선택된 게시물을  삭제하기 */
     function fn_ego_selct_delete(){ //
-//		var elements = document.getElementsByName('selectItem');
-//     	var elements = document.getElementById("chkVal").value = checkArr;
-//     	console.log("히든 값 출력 " + checkArr);
+
     	var elements = checkArr;
-//     	var elementsArr = elements.split(",");
     	var cnt = 0;
     	for(var i=0; i<elements.length; i++){
    			cnt++;
@@ -308,9 +305,7 @@
     	}
     }    
 	
-	
-	
-	// checkbox 실행 
+	// checkbox 실행 제이쿼리 
 	$(function(){
 		$("input[name=selectItem]").on("change", function(){
 			checkboxArr(this);
