@@ -89,6 +89,9 @@ public class EgovSampleController {
 		
 		
 
+		System.out.println("searchKeyword 값  = " + searchVO.getSearchKeyword());
+		
+		
 		/** EgovPropertyService.sample */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
 		searchVO.setPageSize(propertiesService.getInt("pageSize"));
@@ -96,30 +99,31 @@ public class EgovSampleController {
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
+		System.out.println("1 currentPageNO = " +  paginationInfo.getCurrentPageNo());
 		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
+		System.out.println("2 recordcountperpage = " + paginationInfo.getRecordCountPerPage());
 		paginationInfo.setPageSize(searchVO.getPageSize());
+		System.out.println("3 pagesize = " + paginationInfo.getPageSize());
 
 		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex() + 1);
+		System.out.println("4 firstIndex" + searchVO.getFirstIndex());
 		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		System.out.println("4 LastIndex" + searchVO.getLastIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
-		
-		/* searchVO 와 paginationInfo 정보 맞춤 */
-		searchVO.setPageIndex(paginationInfo.getCurrentPageNo());
-		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
-		
-		System.out.println("searchVO SearchCondition = " + searchVO.getSearchCondition());
-		System.out.println("=======searchVO SearchKeyword = " + searchVO.getSearchKeyword());
 //		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
+//		if(check) {
+//			searchVO.setPageIndex(2);
+//		}
 		
+		System.out.println("5 totalrecordCount " + paginationInfo.getTotalRecordCount());
 		
-		
-		System.out.println("searchVO 정보 : " + searchVO.getPageIndex());
 		
 		List<?> sampleList = sampleService.selectSampleList(searchVO);
 		model.addAttribute("resultList", sampleList);
+		System.out.println("디비에서 가져온 값" + sampleList);
 
 		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
+		System.out.println("totCnt = " + totCnt);
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 

@@ -62,9 +62,9 @@
         
         /* 글 목록 화면 function */
         function fn_egov_selectList() {
-//         	if(document.listForm.searchKeyword.value != ''){
-//         		document.listForm.pageIndex.value = 1;	
-//         	}
+        	if(document.listForm.searchKeyword.value != ''){
+        		document.listForm.pageIndex.value = 1;	
+        	}
         	document.listForm.action = "<c:url value='/egovSampleList.do'/>";
            	document.listForm.submit();
         }
@@ -187,6 +187,8 @@
     
     // 셀렉트 갯수가 9개 이상이면(전부체크하면) 전체선택 체크박스에 checked 표시
     function checkTest(){
+    	
+    	var inputCnt = $("input[name=selectItem]").length;
 		$("input[name=selectItem]:checked").each(function(index, item){
     		if(index > 8){
     			console.log("==== 실행 ====");
