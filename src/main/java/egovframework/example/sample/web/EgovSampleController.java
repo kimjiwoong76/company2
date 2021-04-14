@@ -98,6 +98,12 @@ public class EgovSampleController {
 
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();
+//		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
+//		if(check) {
+//			paginationInfo.setCurrentPageNo(1);
+//		} else {
+//			paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
+//		}
 		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
 		System.out.println("1 currentPageNO = " +  paginationInfo.getCurrentPageNo());
 		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
@@ -110,17 +116,15 @@ public class EgovSampleController {
 		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		System.out.println("4 LastIndex" + searchVO.getLastIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-//		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
-//		if(check) {
-//			searchVO.setPageIndex(2);
-//		}
 		
 		System.out.println("5 totalrecordCount " + paginationInfo.getTotalRecordCount());
 		
 		
 		List<?> sampleList = sampleService.selectSampleList(searchVO);
 		model.addAttribute("resultList", sampleList);
-		System.out.println("디비에서 가져온 값" + sampleList);
+//		for(int i=0; i<sampleList.size(); i++) {
+//			System.out.println(sampleList.get(i));
+//		}
 
 		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
 		System.out.println("totCnt = " + totCnt);
