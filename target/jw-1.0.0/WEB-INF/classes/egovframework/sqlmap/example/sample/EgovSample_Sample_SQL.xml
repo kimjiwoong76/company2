@@ -13,7 +13,8 @@
 		<result property="useYn" column="use_yn"/>
 		<result property="regUser" column="reg_user"/>
 	</resultMap>
-
+	
+	
 	<insert id="sampleDAO.insertSample">
 		<![CDATA[
 			INSERT INTO SAMPLE 
@@ -22,7 +23,7 @@
 				  , DESCRIPTION
 				  , USE_YN
 				  , REG_USER )
-			VALUES ( #id#
+			VALUES ( LPAD(ego_board_seq.nextval, 12, 'SAMPLE-00000')
 				  , #name#
 				  , #description#
 				  , #useYn#
@@ -41,12 +42,25 @@
 		]]>
 	</update>
 	
+	
 	<delete id="sampleDAO.deleteSample">
 		<![CDATA[
 			DELETE FROM SAMPLE 
 			WHERE ID=#id#
 		]]>
 	</delete>
+	
+	<delete id="sampleDAO.deleteSample2">
+		<![CDATA[
+			DELETE FROM SAMPLE WHERE ID
+		]]>
+		<isNotEmpty property="chkVal2">
+			<iterate prepend="IN" open="(" close=")" conjunction="," property="chkVal2">
+			 #chkVal2[]#
+			</iterate>
+		</isNotEmpty>
+	</delete>
+	
     
     <select id="sampleDAO.selectSample" resultMap="sample">
         <![CDATA[
@@ -56,30 +70,45 @@
             WHERE ID=#id#
         ]]>
     </select>
-	
-	<select id="sampleDAO.selectSampleList" parameterClass="searchVO" resultClass="egovMap">
-
+    
+    
+    <select id="sampleDAO.selectSampleList" parameterClass="searchVO" resultClass="egovMap">
 			SELECT
-				ID, NAME, DESCRIPTION, USE_YN, REG_USER
-			FROM SAMPLE
-			WHERE 1=1
-			<isEqual prepend="AND" property="searchCondition" compareValue="0">
-				ID LIKE '%' || #searchKeyword# || '%'
-			</isEqual>
-			<isEqual prepend="AND" property="searchCondition" compareValue="1">
-				NAME LIKE '%' || #searchKeyword# || '%'
-			</isEqual>
-			ORDER BY ID DESC
-			LIMIT #recordCountPerPage# OFFSET #firstIndex#		
+			    *
+			FROM
+			    (
+			        SELECT
+			            A.*,
+			            <!-- ROWNUM number 붙여주는 키가 -->
+			            ROWNUM AS RNUM
+			        FROM
+			            (
+			                SELECT
+			                    *
+			                FROM
+			                    SAMPLE WHERE 1=1 
+			                    <isEqual prepend="AND" property="searchCondition" compareValue="0">
+									DESCRIPTION LIKE '%' || #searchKeyword# || '%'
+								</isEqual>
+								<isEqual prepend="AND" property="searchCondition" compareValue="1">
+									NAME LIKE '%' || #searchKeyword# || '%'
+								</isEqual>
+			                ORDER BY
+			                    ID DESC
+			            ) A
+			    )
+			
+			<![CDATA[where RNUM >= #firstIndex# AND RNUM <= #lastIndex# ]]>
+			
+			
 	</select>
+    
 	
 	<select id="sampleDAO.selectSampleListTotCnt" parameterClass="searchVO" resultClass="int">
-
 			SELECT COUNT(*) totcnt
-			FROM SAMPLE
-			WHERE 1=1
+			FROM SAMPLE where 1=1
 			<isEqual prepend="AND" property="searchCondition" compareValue="0">
-				ID LIKE '%' || #searchKeyword# || '%'
+				DESCRIPTION LIKE '%' || #searchKeyword# || '%'
 			</isEqual>
 			<isEqual prepend="AND" property="searchCondition" compareValue="1">
 				NAME LIKE '%' || #searchKeyword# || '%'
