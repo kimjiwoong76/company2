@@ -15,8 +15,6 @@
  */
 package egovframework.example.sample.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -41,7 +41,6 @@ import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import oracle.net.aso.m;
 
 /**
  * @Class Name : EgovSampleController.java
@@ -131,6 +130,16 @@ public class EgovSampleController {
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 
+		
+		JSONObject json = new JSONObject();
+		json.put("jsonList", sampleList);
+		model.addAttribute("jsonList", json);
+		JSONArray jsList = new JSONArray();
+		for(int i=0; i<sampleList.size(); i++) {
+			jsList.add(sampleList.get(i));
+		}
+		System.out.println(jsList);
+		model.addAttribute("jsList", jsList);
 
 		return "sample/egovSampleList";
 	}
