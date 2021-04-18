@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -33,6 +31,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
@@ -75,7 +74,24 @@ public class EgovSampleController {
 	protected DefaultBeanValidator beanValidator;
 	
 	Logger logger = LogManager.getLogger(EgovSampleController.class);
+	
+	
+	
+	@RequestMapping(value = "/test.do")
+	public String test() {
+		return "sample/grid";
+	}
+	
+	@RequestMapping(value = "/grid.do")
+	public @ResponseBody List<?> grid(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception{
+		
 
+		
+		List<?> sampleList = sampleService.selectSampleList2(searchVO);
+		return sampleList;
+		
+	}
+		
 	/**
 	 * 글 목록을 조회한다. (pageing)
 	 * @param searchVO - 조회할 정보가 담긴 SampleDefaultVO
@@ -87,62 +103,43 @@ public class EgovSampleController {
 	public String selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception {
 		
 		
-
-		System.out.println("searchKeyword 값  = " + searchVO.getSearchKeyword());
-		
-		
 		/** EgovPropertyService.sample */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
 		searchVO.setPageSize(propertiesService.getInt("pageSize"));
 
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();
-//		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
-//		if(check) {
-//			paginationInfo.setCurrentPageNo(1);
-//		} else {
-//			paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
-//		}
 		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
-		System.out.println("1 currentPageNO = " +  paginationInfo.getCurrentPageNo());
 		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
-		System.out.println("2 recordcountperpage = " + paginationInfo.getRecordCountPerPage());
 		paginationInfo.setPageSize(searchVO.getPageSize());
-		System.out.println("3 pagesize = " + paginationInfo.getPageSize());
 
 		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex() + 1);
-		System.out.println("4 firstIndex" + searchVO.getFirstIndex());
 		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		System.out.println("4 LastIndex" + searchVO.getLastIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
-		System.out.println("5 totalrecordCount " + paginationInfo.getTotalRecordCount());
 		
 		
 		List<?> sampleList = sampleService.selectSampleList(searchVO);
 		model.addAttribute("resultList", sampleList);
-//		for(int i=0; i<sampleList.size(); i++) {
-//			System.out.println(sampleList.get(i));
-//		}
 
 		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
-		System.out.println("totCnt = " + totCnt);
 		paginationInfo.setTotalRecordCount(totCnt);
 		model.addAttribute("paginationInfo", paginationInfo);
 
 		
-		JSONObject json = new JSONObject();
-		json.put("jsonList", sampleList);
-		model.addAttribute("jsonList", json);
-		JSONArray jsList = new JSONArray();
-		for(int i=0; i<sampleList.size(); i++) {
-			jsList.add(sampleList.get(i));
-		}
-		System.out.println(jsList);
-		model.addAttribute("jsList", jsList);
+//		JSONObject json = new JSONObject();
+//		json.put("jsonList", sampleList);
+//		model.addAttribute("jsonList", json);
+//		JSONArray jsList = new JSONArray();
+//		for(int i=0; i<sampleList.size(); i++) {
+//			jsList.add(sampleList.get(i));
+//		}
+//		System.out.println(jsList);
+//		model.addAttribute("jsList", jsList);
 
 		return "sample/egovSampleList";
 	}
+	
+	
 
 	/**
 	 * 글 등록 화면을 조회한다.

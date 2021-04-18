@@ -72,6 +72,20 @@
     </select>
     
     
+    
+    <select id="sampleDAO.selectSampleList2" parameterClass="searchVO" resultClass="egovMap">
+			
+			             SELECT       *
+			                FROM
+			                    SAMPLE 
+			                ORDER BY
+			                    ID DESC
+	
+			
+	</select>
+    
+    
+    
     <select id="sampleDAO.selectSampleList" parameterClass="searchVO" resultClass="egovMap">
 			SELECT
 			    *

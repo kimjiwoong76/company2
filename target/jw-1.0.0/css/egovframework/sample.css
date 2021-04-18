@@ -5,6 +5,11 @@
 /*      				         			                                    */
 /*									                                            */
 /********************************************************************************/
+th, span{
+	-webkit-print-color-adjust: exact !important;
+}
+
+
 * {margin:0;padding:0;}
 * html {height:1px;}
 body {margin:0; padding:0; font-family:"굴림"; font-size:12px; color:#666; scroll:auto;}

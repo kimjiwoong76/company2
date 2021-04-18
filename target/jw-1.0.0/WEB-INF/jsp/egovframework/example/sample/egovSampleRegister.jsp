@@ -58,6 +58,14 @@
             }
         }
         
+        
+        /* pagination 페이지 링크 function */
+        function fn_egov_link_page(pageNo){
+        	document.detailForm.pageIndex.value = pageNo;
+        	document.detailForm.action = "<c:url value='/egovSampleList.do'/>";
+           	document.detailForm.submit();
+        }
+        
         -->
     </script>
 </head>
@@ -129,7 +137,7 @@
     		<ul>
     			<li>
                     <span class="btn_blue_l">
-                        <a href="javascript:fn_egov_selectList();"><spring:message code="button.list" /></a>
+                        <a href="#!" onClick="fn_egov_link_page(${searchVO.pageIndex})"><spring:message code="button.list" /></a>
                         <img src="<c:url value='/images/egovframework/example/btn_bg_r.gif'/>" style="margin-left:6px;" alt=""/>
                     </span>
                 </li>
@@ -156,7 +164,7 @@
                         <img src="<c:url value='/images/egovframework/example/btn_bg_r.gif'/>" style="margin-left:6px;" alt=""/>
                     </span>
                 </li>
-            </ul>
+            </ul>s
     	</div>
     </div>
     <!-- 검색조건 유지 -->
