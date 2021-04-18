@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.example.sample.service.EgovSampleService;
@@ -76,11 +77,28 @@ public class EgovSampleController {
 	Logger logger = LogManager.getLogger(EgovSampleController.class);
 	
 	
-	
 	@RequestMapping(value = "/test.do")
 	public String test() {
 		return "sample/grid";
 	}
+	
+	@RequestMapping("/test2.do")
+	@ResponseBody
+	public ModelAndView test2(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) {
+		ModelAndView mav = new ModelAndView();
+		try {
+			List<?> sampleList = sampleService.selectSampleList2(searchVO);
+			int totCnt = sampleService.selectSampleListTotCnt(searchVO);
+			mav.addObject("sampleList", sampleList);
+			mav.addObject("total", totCnt);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return  mav;
+	}
+	
 	
 	@RequestMapping(value = "/grid.do")
 	public @ResponseBody List<?> grid(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception{

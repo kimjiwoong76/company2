@@ -58,11 +58,14 @@
 	<header>
 		<h1>게시판</h1>
 	</header>
+	<form:form commandName="searchVO" id="listForm" name="listForm" method="post">
+	<input type="hidden" name="selectedId" />
 	<div class="table-wrap">
 		<table id="list"></table>
 		<div id="pager"></div>
 		<div id="pageCustom"></div>
 	</div>
+	</form:form>
 	<script>
 	var searchResultColNames =  ['ID','NAME', 'DESCRIPTION', 'useYn', 'regUser'];
 	var searchResultColModel =  [
@@ -74,7 +77,12 @@
 	];
 	
 
-	
+	/* pagination 페이지 링크 function */
+    function fn_egov_select(id){
+    	document.listForm.selectedId.value = id;
+		document.listForm.action = "<c:url value='/updateSampleView.do'/>";
+       	document.listForm.submit();
+    }
 	
 	
 	<!-- 그리드 페이징 종료 -->
@@ -104,7 +112,15 @@
             	$("#last_pager").html("<i class='fas fa-angle-double-right'></i>");
             	$("#prev_pager").html("<i class='fas fa-angle-left'></i>");
             	$("#first_pager").html("<i class='fas fa-angle-double-left'></i>");
+            },
+            onCellSelect: function(rowid,icol,cellcontent,e){
+            	fn_egov_select(rowid);
+            	// rowid : 선택한 셀의 행 번호
+                // icol : 선택한 셀의 열 번호
+                // cellcontent : 선택한 셀의 값 
+            	
             }
+               
             
 		});
 		
