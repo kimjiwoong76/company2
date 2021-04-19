@@ -29,21 +29,8 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/jqgrid/css/ui.jqgrid.css'/> "/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/jqgrid/css/ui.multiselect.css'/> "/>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script>
-	    jQuery.browser = {};
-	    (function () {
-	         jQuery.browser.msie = false;
-	         jQuery.browser.version = 0;
-	         if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-	              jQuery.browser.msie = true;
-	              jQuery.browser.version = RegExp.$1;
-	         }
-	    })();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/i18n/grid.locale-en.js"></script>
-	<script src="https://cdn.jsdelivr.net/jqgrid/4.6.0/jquery.jqGrid.min.js"></script>
     <script type="text/javaScript" language="javascript" defer="defer">
-        <!--
+ 
         
        
        
@@ -89,11 +76,10 @@
         
 
 
-        -->
     </script>
 </head>
 
-<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
+<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;"  onload="javascript:checkIndex();">
     <form:form commandName="searchVO" id="listForm" name="listForm" method="post">
         <input type="hidden" name="selectedId" />
         <div id="content_pop">
@@ -127,54 +113,54 @@
         	<!-- List -->
         	<div id="table">
         		<span style="font-size: 13px; padding-left: 5px;">(<c:out value='${paginationInfo.totalRecordCount}' />건)</span>
-<!--         		<table width="100%" border="0" cellpadding="0" cellspacing="0" summary="카테고리ID, 케테고리명, 사용여부, Description, 등록자 표시하는 테이블" id="jqgrid"> -->
-<%--         			<caption style="visibility:hidden">카테고리ID, 케테고리명, 사용여부, Description, 등록자 표시하는 테이블</caption> --%>
-<%--         			<colgroup> --%>
-<%--         				<col width="40" /> --%>
-<%--         				<col width="40"/> --%>
-<%--         				<col width="100"/> --%>
-<%--         				<col width="120"/> --%>
-<%--         				<col width="50"/> --%>
-<%--         				<col width="?"/> --%>
-<%--         				<col width="60"/> --%>
-<%--         			</colgroup> --%>
-<!--         			<tr> -->
-<!--         				<th align="center">선택  <input type="checkbox" name="selectAll" id="selectAll" onclick="fn_ego_allCk(this.checked)" /></th> -->
-<!--         				<th align="center">No</th> -->
-<%--         				<th align="center"><spring:message code="title.sample.id" /></th> --%>
-<%--         				<th align="center"><spring:message code="title.sample.name" /></th> --%>
-<%--         				<th align="center"><spring:message code="title.sample.useYn" /></th> --%>
-<%--         				<th align="center"><spring:message code="title.sample.description" /></th> --%>
-<%--         				<th align="center"><spring:message code="title.sample.regUser" /></th> --%>
-<!--         			</tr> -->
-<%--         			<c:forEach var="result" items="${resultList}" varStatus="status"> --%>
-<!--             			<tr> -->
-<!--             				<td align="center" class="listtd" style="vertical-align:middle;"> -->
-<%--             					<input type="checkbox" name="selectItem"  value="<c:out value="${result.id}"/>"  /> --%>
-<!--             				</td> -->
-<%-- 							<td align="center" class="listtd"><c:out value="${paginationInfo.totalRecordCount+1 - ((paginationInfo.currentPageNo-1) * searchVO.pageSize + status.count)}"/></td> --%>
-<%--             				<td align="center" class="listtd"><a href="javascript:fn_egov_select('<c:out value="${result.id}"/>')"><c:out value="${result.id}"/></a></td> --%>
-<%--             				<td align="center" class="listtd"><c:out value="${result.name}"/>&nbsp;</td> --%>
-<%--             				<td align="center" class="listtd"><c:out value="${result.useYn}"/>&nbsp;</td> --%>
-<%--             				<td align="center" class="listtd"><c:out value="${result.description}"/>&nbsp;</td> --%>
-<%--             				<td align="center" class="listtd"><c:out value="${result.regUser}"/>&nbsp;</td> --%>
-<!--             			</tr> -->
-<%--         			</c:forEach> --%>
+        		<table width="100%" border="0" cellpadding="0" cellspacing="0" summary="카테고리ID, 케테고리명, 사용여부, Description, 등록자 표시하는 테이블" id="jqgrid">
+        			<caption style="visibility:hidden">카테고리ID, 케테고리명, 사용여부, Description, 등록자 표시하는 테이블</caption>
+        			<colgroup>
+        				<col width="40" />
+        				<col width="40"/>
+        				<col width="100"/>
+        				<col width="120"/>
+        				<col width="50"/>
+        				<col width="?"/>
+        				<col width="60"/>
+        			</colgroup>
+        			<tr>
+        				<th align="center">선택  <input type="checkbox" name="selectAll" id="selectAll" onclick="fn_ego_allCk(this.checked)" /></th>
+        				<th align="center">No</th>
+        				<th align="center"><spring:message code="title.sample.id" /></th>
+        				<th align="center"><spring:message code="title.sample.name" /></th>
+        				<th align="center"><spring:message code="title.sample.useYn" /></th>
+        				<th align="center"><spring:message code="title.sample.description" /></th>
+        				<th align="center"><spring:message code="title.sample.regUser" /></th>
+        			</tr>
+        			<c:forEach var="result" items="${resultList}" varStatus="status">
+            			<tr>
+            				<td align="center" class="listtd" style="vertical-align:middle;">
+            					<input type="checkbox" name="selectItem"  value="<c:out value="${result.id}"/>"  />
+            				</td>
+							<td align="center" class="listtd"><c:out value="${paginationInfo.totalRecordCount+1 - ((paginationInfo.currentPageNo-1) * searchVO.pageSize + status.count)}"/></td>
+            				<td align="center" class="listtd"><a href="javascript:fn_egov_select('<c:out value="${result.id}"/>')"><c:out value="${result.id}"/></a></td>
+            				<td align="center" class="listtd"><c:out value="${result.name}"/>&nbsp;</td>
+            				<td align="center" class="listtd"><c:out value="${result.useYn}"/>&nbsp;</td>
+            				<td align="center" class="listtd"><c:out value="${result.description}"/>&nbsp;</td>
+            				<td align="center" class="listtd"><c:out value="${result.regUser}"/>&nbsp;</td>
+            			</tr>
+        			</c:forEach>
 <!--         		</table> -->
 					<table id="jqgrid">
 					</table>
         	</div>
         	<!-- /List -->
         	<div id="paging">
-<%--         		<c:choose> --%>
-<%--         			<c:when test="${paginationInfo.totalRecordCount == 0 }"> --%>
-<!--      					<p>검색 결과가 없습니다.</p> -->
-<%--      				</c:when> --%>
-<%--      				<c:otherwise> --%>
-<%-- 		        		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_egov_link_page" /> --%>
-<%-- 		        		<form:hidden path="pageIndex" /> --%>
-<%-- 	        		</c:otherwise> --%>
-<%--         		</c:choose> --%>
+        		<c:choose>
+        			<c:when test="${paginationInfo.totalRecordCount == 0 }">
+     					<p>검색 결과가 없습니다.</p>
+     				</c:when>
+     				<c:otherwise>
+		        		<ui:pagination paginationInfo = "${paginationInfo}" type="image" jsFunction="fn_egov_link_page" />
+		        		<form:hidden path="pageIndex" />
+	        		</c:otherwise>
+        		</c:choose>
         	</div>
         	<div id="sysbtn">
         	  <ul>
@@ -198,7 +184,6 @@
     </form:form>
     <script>
     
-
     
     // 셀렉트 갯수가 체크박스 갯수에 따라 (전부체크하면) 전체선택 체크박스에 checked 표시
     function checkTest(){
@@ -334,42 +319,11 @@
 	});
 	
 	//최종 완료 버전
+		
+		
+		
+		
 	
-	$(function(){
-		$("#jqgrid").jqGrid({
-	    	url: '/egovSampleListJson.do',
-	        datatype: "local",
-	        colNames: ['#', 'id', 'description', 'useYn', 'regUser'],
-	        height: 380,
-	        rowNum: -1,
-	        rownumbers  : true,
-	        rowList: [10,20,30],
-	        colModel:[
-                {name:'id', index: 'id',  align:'right'},
-                {name:'name', index: 'name',  align:'right'},
-                {name:'description', index: 'description', align:'right'},
-                {name:'useYn', index: 'useYn',  align:'right'},
-                {name:'regUser', index: 'regData',  align:'right'}
-            ],
-            multiselect : true,
-            viewrecords : true,
-	        caption:"JQGRID TABLE"
-	   });
-		
-		/* var jsList = '${rows}';
-		var jsListString = JSON.stringify(jsList);
-		var jsListParse = JSON.parse(jsListString);
-		console.log(jsListParse);
-		
-		makeTable('jqgrid', jsListParse); */
-		
-		
-		
-		
-	});
-	
-
-					
 	</script>
 </body>
 </html>

@@ -131,6 +131,18 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 	public List<?> selectSampleList(SampleDefaultVO searchVO) throws Exception {
 		return sampleDAO.selectSampleList(searchVO);
 	}
+	
+	/**
+	 * 글 목록을 조회한다.
+	 * @param searchVO - 조회할 정보가 담긴 VO
+	 * @return 글 목록2
+	 * @exception Exception
+	 */
+	@Override
+	public List<?> selectSampleList2(SampleDefaultVO searchVO) throws Exception {
+		return sampleDAO.selectSampleList2(searchVO);
+	}
+	
 
 	/**
 	 * 글 총 갯수를 조회한다.
@@ -156,5 +168,7 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 		sampleDAO.deleteSample2(hm);
 		
 	}
+
+	
 
 }

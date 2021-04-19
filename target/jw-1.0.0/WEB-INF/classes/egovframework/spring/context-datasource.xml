@@ -31,8 +31,8 @@
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@61.77.235.93:1521/bathorder" />
-        <property name="username" value="bathorder"/>
-        <property name="password" value="bathorder"/>
+        <property name="username" value="bathorder" />
+        <property name="password" value="bathorder" />
     </bean>
     
     

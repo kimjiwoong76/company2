@@ -92,10 +92,18 @@ public class SampleDAO extends EgovAbstractDAO {
 	 * @exception Exception
 	 */
 	public List<?> selectSampleList(SampleDefaultVO searchVO) throws Exception {
-		System.out.println("vo.firstIndex : " + searchVO.getFirstIndex());
-		System.out.println("vo.RecordCountPerPage" + searchVO.getRecordCountPerPage());
-		System.out.println("vo.LastIndex : " + searchVO.getLastIndex());
 		return list("sampleDAO.selectSampleList", searchVO);
+	}
+	
+	
+	/**
+	 * 글 목록을 조회한다.
+	 * @param searchMap - 조회할 정보가 담긴 Map
+	 * @return 글 목록2
+	 * @exception Exception
+	 */
+	public List<?> selectSampleList2(SampleDefaultVO searchVO) throws Exception {
+		return list("sampleDAO.selectSampleList2", searchVO);
 	}
 
 	/**
