@@ -83,21 +83,6 @@
 		</form:form>
 	</div>
 	<script>
-	
-	
-	
-	
-	
-	var searchResultColNames =  ['수정/삭제', 'ID','NAME', 'DESCRIPTION', 'useYn', 'regUser'];
-	var searchResultColModel =  [
-		{ name:'myac', width: 70, fixed:true, sortable : false, formatter:'actions', formatoptions:{keys:true, delbutton:true}},
-		{name:'id',       	index:'id',      	width: '15%', align:'center'},
-	    {name:'name',       index:'name',       width: '15%', align:'center', editable : true},
-	    {name:'description',index:'description',width: '40%', align:'center', editable : true},
-	    {name:'useYn',      index:'useYn',      width: '10%', align:'center', editable : true,  edittype:'select', editoptions: {value:'Y:Y;N:N'}},
-	    {name:'regUser',    index:'regUser',    width: '20%', align:'center', editable : true}
-	];
-	
 
 	
 	/* 글 수정 function */
@@ -140,13 +125,31 @@
        	document.listForm.action = "<c:url value='/updateSampleView.do'/>";
        	document.listForm.submit();
     }
+    /* 글 삭제 function */
+    
+    function fn_egov_delete(){
+    	
+    }
+    
     
 	
 	
 	
-	
+	var searchResultColNames =  ['수정/삭제', 'ID','NAME', 'DESCRIPTION', 'useYn', 'regUser'];
+	var searchResultColModel =  [
+		{ name:'myac', width: 70, fixed:true, sortable : false, formatter:'actions', formatoptions:{keys:true, delbutton:true}},
+		{name:'id',       	index:'id',      	width: '15%', align:'center'},
+	    {name:'name',       index:'name',       width: '15%', align:'center', editable : true},
+	    {name:'description',index:'description',width: '40%', align:'center', editable : true},
+	    {name:'useYn',      index:'useYn',      width: '10%', align:'center', editable : true,  edittype:'select', editoptions: {value:'Y:Y;N:N'}},
+	    {name:'regUser',    index:'regUser',    width: '20%', align:'center', editable : true}
+	];
 	$(function(){
-	
+		
+		function reload(){
+			$("#list").jqGrid().trigger("reloadGrid");
+		}
+		
 		$("#list").jqGrid({
 			url: "/grid.do",
 			datatype: "json",
@@ -158,20 +161,17 @@
             viewrecords: true, // 그리드가 보여줄 총 페이지 현재 페이지등의 정보를 노출 ex) 보기 1-10 / 33
             height:300,
             width: 1000,
-            editurl: "/updateSample.do",
-	        cellEdit:true,
+            editurl: "/oper.do", // 셀 수정 요청 보낼 컨트롤러
+	        cellEdit:false,
             loadonce: true,
             cellsubmit:'remote',
-            cellurl:'/updateSample.do',
+            cellurl:'/grid.do', // 셀이 수정된 후 이동할 url
+            
             loadComplete: function(data){
             	$("#next_pager").html("<i class='fas fa-angle-right'></i>");
             	$("#last_pager").html("<i class='fas fa-angle-double-right'></i>");
             	$("#prev_pager").html("<i class='fas fa-angle-left'></i>");
             	$("#first_pager").html("<i class='fas fa-angle-double-left'></i>");
-            },
-          	//그리드 수정시 submit 전                       
-            beforeSubmitCell : function(rowid, cellname, value) {   
-                return {"id":rowid, "cellName":cellname, "cellValue":value}
             },
             //그리드 수정시 submit 후
             afterSubmitCell : function(res) {    
@@ -182,8 +182,23 @@
                     alert(userMsg);
                 }
                 return [(aResult.jqResult == "1") ? true : false, userMsg];
- 			}                         
+ 			},
+ 			// 그리드가 완전히 모든 작업을 완료한 후 발생하는 이벤트
+ 			gridComplete : function(){            
+				
+ 			}
 		});
+		
+		
+		$('#list').jqGrid('navGrid', '#pager', { edit: true, add: true, del: true,search : false},
+		    //edit options
+		    { url: '/updateSample.do' },
+		    //add options
+		    { url: '/home1/AddUserData' },
+		    //delete options
+		    { url: '/deleteSample.do' }
+		);
+		
 
 	});
 		

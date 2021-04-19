@@ -15,14 +15,13 @@
  */
 package egovframework.example.sample.web;
 
-import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -31,7 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -233,9 +231,9 @@ public class EgovSampleController {
 	 * @exception Exception
 	 */
 	@RequestMapping("/updateSample.do")
-	public String updateSample(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status)
+	public String updateSample(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status, HttpServletRequest req)
 			throws Exception {
-		System.out.println(sampleVO.toString());
+		
 		beanValidator.validate(sampleVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
@@ -291,5 +289,32 @@ public class EgovSampleController {
 		
 		return "forward:/egovSampleList.do";
 	}
+	
+	
+	@RequestMapping("oper.do")
+	public String oper(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status, HttpServletRequest req)
+			throws Exception {
+		System.out.println(req.getParameter("oper"));
+		String oper = req.getParameter("oper");
+		if(oper.equals("del")) {
+			System.out.println("delete");
+			sampleService.deleteSample(sampleVO);
+			status.setComplete();
+			return "forward:/egovSampleList.do";
+		} else {
+			System.out.println("update");
+			beanValidator.validate(sampleVO, bindingResult);
+
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("sampleVO", sampleVO);
+				return "sample/egovSampleRegister";
+			}
+
+			sampleService.updateSample(sampleVO);
+			status.setComplete();
+			return "forward:/egovSampleList.do";
+		}
+	}
+	
 
 }
