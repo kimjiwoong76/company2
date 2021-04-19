@@ -82,7 +82,7 @@ public class EgovSampleController {
 	
 	
 	@RequestMapping(value = "/test.do")
-	public String test() {
+	public String test(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) {
 		return "sample/grid";
 	}
 	
@@ -107,8 +107,8 @@ public class EgovSampleController {
 	@RequestMapping(value = "/grid.do")
 	public @ResponseBody List<?> grid(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception{
 		
+		System.out.println(searchVO.toString());
 
-		
 		List<?> sampleList = sampleService.selectSampleList2(searchVO);
 		return sampleList;
 		
@@ -235,7 +235,7 @@ public class EgovSampleController {
 	@RequestMapping("/updateSample.do")
 	public String updateSample(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status)
 			throws Exception {
-
+		System.out.println(sampleVO.toString());
 		beanValidator.validate(sampleVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
