@@ -15,24 +15,27 @@
  */
 package egovframework.example.sample.web;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
@@ -40,7 +43,6 @@ import egovframework.example.sample.service.EgovSampleService;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 /**
  * @Class Name : EgovSampleController.java
@@ -83,19 +85,20 @@ public class EgovSampleController {
 	 * @return "egovSampleList"
 	 * @exception Exception
 	 */
+	//@ResponseBody
 	@RequestMapping(value = "/egovSampleList.do")
 	public String selectSampleList(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception {
 		
 		
-
+/*
 		System.out.println("searchKeyword 값  = " + searchVO.getSearchKeyword());
 		
 		
-		/** EgovPropertyService.sample */
+		*//** EgovPropertyService.sample *//*
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
 		searchVO.setPageSize(propertiesService.getInt("pageSize"));
 
-		/** pageing setting */
+		*//** pageing setting *//*
 		PaginationInfo paginationInfo = new PaginationInfo();
 //		boolean check = searchVO.getSearchKeyword().equals("")  ? false : true;
 //		if(check) {
@@ -116,33 +119,42 @@ public class EgovSampleController {
 		System.out.println("4 LastIndex" + searchVO.getLastIndex());
 		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 		
-		System.out.println("5 totalrecordCount " + paginationInfo.getTotalRecordCount());
+		System.out.println("5 totalrecordCount " + paginationInfo.getTotalRecordCount());*/
 		
 		
-		List<?> sampleList = sampleService.selectSampleList(searchVO);
-		model.addAttribute("resultList", sampleList);
+		//List<?> sampleList = sampleService.selectSampleList(searchVO);
+		//model.addAttribute("resultList", sampleList);
 //		for(int i=0; i<sampleList.size(); i++) {
 //			System.out.println(sampleList.get(i));
 //		}
 
-		int totCnt = sampleService.selectSampleListTotCnt(searchVO);
-		System.out.println("totCnt = " + totCnt);
+		//int totCnt = sampleService.selectSampleListTotCnt(searchVO);
+		/*System.out.println("totCnt = " + totCnt);
 		paginationInfo.setTotalRecordCount(totCnt);
-		model.addAttribute("paginationInfo", paginationInfo);
+		model.addAttribute("paginationInfo", paginationInfo);*/
 
-		
+		/*
 		JSONObject json = new JSONObject();
-		json.put("jsonList", sampleList);
+		json.put("rows", sampleList);
 		model.addAttribute("jsonList", json);
 		JSONArray jsList = new JSONArray();
 		for(int i=0; i<sampleList.size(); i++) {
 			jsList.add(sampleList.get(i));
 		}
-		System.out.println(jsList);
-		model.addAttribute("jsList", jsList);
+		System.out.println(jsList);*/
+		//model.addAttribute("rows", sampleList);
 
 		return "sample/egovSampleList";
 	}
+	
+	@RequestMapping(value = "/egovSampleListJson.do")
+	public @ResponseBody Map<String, Object> getProgramHistoryList(HttpServletRequest request, SampleDefaultVO searchVO) throws Exception {
+			Map<String, Object> param = new HashMap();
+			param.put("rows", sampleService.selectSampleList(searchVO));
+			param.put("result", "SUCCESS");
+		return param;
+	}
+	
 
 	/**
 	 * 글 등록 화면을 조회한다.

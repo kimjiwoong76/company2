@@ -198,8 +198,7 @@
     </form:form>
     <script>
     
-    
-    <!--
+
     
     // 셀렉트 갯수가 체크박스 갯수에 따라 (전부체크하면) 전체선택 체크박스에 checked 표시
     function checkTest(){
@@ -337,65 +336,40 @@
 	//최종 완료 버전
 	
 	$(function(){
-// 		function makeTable(id, array){
-// 		    var cnames = ['#', 'NAME', 'DESCRIPTION', 'USE_YN', 'REG_USER'];
-// 		    console.log(jsListParse);
-// 		    $("#"+id).jqGrid({
-// 		    	url: '/egovSampleList.do',
-// 		        datatype: "local",
-// 		        colNames: cnames,
-// 		        height: 380,
-// 		        rowNum: 2,
-// 		        rownumbers  : true,
-// 		        rowList: [10,20,30],
-// 		        colModel:[
-// 	                {name:'id', index: 'id',  align:'right'},
-// 	                {name:'name', index: 'name',  align:'right'},
-// 	                {name:'description', index: 'description', align:'right'},
-// 	                {name:'useYn', index: 'useYn',  align:'right'},
-// 	                {name:'regUser', index: 'regData',  align:'right'}
-// 	            ],
-// 	            multiselect : true,
-// 	            viewrecords : true,
-	            
-// 		        caption:"JQGRID TABLE"
-// 		        });
-// 		}
+		$("#jqgrid").jqGrid({
+	    	url: '/egovSampleListJson.do',
+	        datatype: "local",
+	        colNames: ['#', 'id', 'description', 'useYn', 'regUser'],
+	        height: 380,
+	        rowNum: -1,
+	        rownumbers  : true,
+	        rowList: [10,20,30],
+	        colModel:[
+                {name:'id', index: 'id',  align:'right'},
+                {name:'name', index: 'name',  align:'right'},
+                {name:'description', index: 'description', align:'right'},
+                {name:'useYn', index: 'useYn',  align:'right'},
+                {name:'regUser', index: 'regData',  align:'right'}
+            ],
+            multiselect : true,
+            viewrecords : true,
+	        caption:"JQGRID TABLE"
+	   });
 		
-		var jsList = '${jsList}';
-		var jsListParse = JSON.parse(jsList);
+		/* var jsList = '${rows}';
+		var jsListString = JSON.stringify(jsList);
+		var jsListParse = JSON.parse(jsListString);
 		console.log(jsListParse);
 		
-// 		makeTable('jqgrid', jsListParse);
+		makeTable('jqgrid', jsListParse); */
 		
 		
 		
 		
 	});
-	$(function() {
-		var searchResultColNames =  ['게시글관리번호', '번호', '제목', '작성자', '날짜', '조회수'];
-	
-		               
-        $("#jqgrid").jqGrid({
-        	datatype: 'local',
-            height: 261,
-            width: 1019,
-            colNames: searchResultColNames,
-            colModel:  [
-            	{name:'bbsMgtNo',       index:'bbsMgtNo',      align:'center', hidden:true},
-                {name:'bbsNum',         index:'bbsNum',        align:'left',   width:'12%'},
-                {name:'bbsTitle',       index:'bbsTitle',      align:'center', width:'50%'},
-                {name:'bbsWriter',      index:'bbsWriter',     align:'center', width:'14%'},
-                {name:'bbsDate',        index:'bbsDate',       align:'center', width:'12%'},
-                {name:'bbsHit',         index:'bbsHit',        align:'center', width:'12%'}
-            ],
-            
-           
-        });
-    });
 	
 
-					-->
+					
 	</script>
 </body>
 </html>
