@@ -169,6 +169,11 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 		
 	}
 
+	@Override
+	public int selectRecord() {
+		return sampleDAO.selectRecord();
+	}
+
 	
 
 }

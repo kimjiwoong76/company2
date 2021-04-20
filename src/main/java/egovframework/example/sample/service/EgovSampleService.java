@@ -103,5 +103,7 @@ public interface EgovSampleService {
 	
 	void deleteSample2(HashMap<String, Object> hm);
 
+	int selectRecord();
+
 
 }

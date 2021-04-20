@@ -5,6 +5,7 @@
 
 	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="searchVO" type="egovframework.example.sample.service.SampleDefaultVO"/>
+	<typeAlias  alias="sampleVO" type="egovframework.example.sample.service.SampleVO"/>
 
 	<resultMap id="sample" class="egovframework.example.sample.service.SampleVO">
 		<result property="id" column="id"/>
@@ -73,8 +74,9 @@
     
     
     
-    <select id="sampleDAO.selectSampleList2" parameterClass="searchVO" resultClass="egovMap">
+    <select id="sampleDAO.selectSampleList2" parameterClass="searchVO" resultClass="sampleVO">
 			
+				
 			             SELECT       *
 			                FROM
 			                    SAMPLE where 1=1
@@ -134,5 +136,13 @@
 				NAME LIKE '%' || #searchKeyword# || '%'
 			</isEqual>
 	</select>
+	
+	<select id="sampleDAO.getCount" parameterClass="searchVO" resultClass="int">
+			SELECT COUNT(*) totalCnt from sample
+	</select>
+	<select id="sampleDAO.selectRecord" resultClass="int">
+			SELECT CEIL(count(*)/10) totalPage from sample
+	</select>
+	
 
 </sqlMap>
