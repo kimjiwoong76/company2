@@ -22,9 +22,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -105,12 +108,58 @@ public class EgovSampleController {
 	@RequestMapping(value = "/grid.do")
 	public @ResponseBody List<?> grid(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO) throws Exception{
 		
-		System.out.println(searchVO.toString());
-
-		List<?> sampleList = sampleService.selectSampleList2(searchVO);
+		List<?> sampleList = sampleService.selectSampleList2(sampleVO);
+		System.out.println("sampleList = " + sampleList);
 		return sampleList;
 		
 	}
+	
+	
+	@RequestMapping(value = "/grid3.do")
+	@ResponseBody
+	public JSONObject grid3(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO, HttpServletResponse response) throws Exception{
+		
+		Enumeration params = req.getParameterNames();
+		System.out.println("----------------------------");
+		while (params.hasMoreElements()){
+		    String name = (String)params.nextElement();
+		    System.out.println(name + " : " +req.getParameter(name));
+		}
+		System.out.println("----------------------------");
+		
+		int totalCnt =  sampleService.selectSampleListTotCnt(searchVO);;
+		List<?> sampleList = sampleService.selectSampleList2(sampleVO);
+		JSONObject jsonObject = new JSONObject();
+		JSONArray cell = new JSONArray();
+		SampleVO sampleData = null;
+		
+		for(int i=0; i<sampleList.size(); i++) {
+			System.out.println("sampleList = " + sampleList.get(i));
+			sampleData = (SampleVO) sampleList.get(i);
+			JSONObject obj = new JSONObject();
+			obj.put("id", sampleData.getId());
+			obj.put("name", sampleData.getName());
+			obj.put("description", sampleData.getDescription());
+			obj.put("useYn", sampleData.getUseYn());
+			System.out.println(sampleData.getUseYn());
+			obj.put("regUser", sampleData.getRegUser());
+			System.out.println(sampleData.getRegUser());
+			cell.add(obj);			
+			
+		}
+		
+		
+		jsonObject.put("total", totalCnt);
+		jsonObject.put("page", "1");
+		jsonObject.put("records", "10");
+		jsonObject.put("rows", cell);
+        System.out.println("### jsonObject : "+jsonObject);
+		
+		return jsonObject;
+		
+	}
+		
+	
 		
 	/**
 	 * 글 목록을 조회한다. (pageing)

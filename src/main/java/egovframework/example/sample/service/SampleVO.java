@@ -58,9 +58,23 @@ public class SampleVO extends SampleDefaultVO {
 	private Date est_end_date;
 	private String delYn;
 	private String chkVal2;
+	private int rows;
+	private int page;
 	
 	
 	
+	public int getRows() {
+		return rows;
+	}
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
 	public String getChkVal2() {
 		return chkVal2;
 	}

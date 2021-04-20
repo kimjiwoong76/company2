@@ -31,8 +31,8 @@
     
     <script src="<c:url value="/jqgrid/js/jquery-1.11.0.min.js" />"></script>
     <script src="<c:url value="/js/jquery-ui.min.js" />"></script>
-    <script src="<c:url value="/jqgrid/js/i18n/grid.locale-kr.js" />"></script>
     <script src="<c:url value="/jqgrid/js/jquery.jqGrid.min.js" />"></script>
+    <script src="<c:url value="/jqgrid/js/i18n/grid.locale-kr.js" />"></script>
     <style>
     	header{
     		padding:20px 0;
@@ -56,7 +56,7 @@
 		<h1>게시판</h1>
 	</header>
 		<div class="table-wrap">
-		<form:form commandName="searchVO" id="listForm" name="listForm" method="post">
+		<form:form commandName="searchVO" id="listForm" name="listForm" method="get">
 		<input type="hidden" name="selectedId" />
 		<div id="search" style="position:relative; z-index:999; right:20px;">
         		<ul>
@@ -127,32 +127,25 @@
     }
     /* 글 삭제 function */
     
-    function fn_egov_delete(){
-    	
-    }
-    
     
 	
 	
 	
-	var searchResultColNames =  ['수정/삭제', 'ID','NAME', 'DESCRIPTION', 'useYn', 'regUser'];
-	var searchResultColModel =  [
-		{ name:'myac', width: 70, fixed:true, sortable : false, formatter:'actions', formatoptions:{keys:true, delbutton:true}},
-		{name:'id',       	index:'id',      	width: '15%', align:'center'},
-	    {name:'name',       index:'name',       width: '15%', align:'center', editable : true},
-	    {name:'description',index:'description',width: '40%', align:'center', editable : true},
-	    {name:'useYn',      index:'useYn',      width: '10%', align:'center', editable : true,  edittype:'select', editoptions: {value:'Y:Y;N:N'}},
-	    {name:'regUser',    index:'regUser',    width: '20%', align:'center', editable : true}
-	];
+	
 	$(function(){
-		
-		function reload(){
-			$("#list").jqGrid().trigger("reloadGrid");
-		}
-		
+		var searchResultColNames =  ['수정/삭제', 'ID','NAME', 'DESCRIPTION', 'useYn', 'regUser'];
+		var searchResultColModel =  [
+			{ name:'myac', width: 70, fixed:true, sortable : false, formatter:'actions', formatoptions:{keys:true, delbutton:true}},
+			{name:'id',       	index:'id',      	width: '15%', align:'center'},
+		    {name:'name',       index:'name',       width: '15%', align:'center', editable : true},
+		    {name:'description',index:'description',width: '40%', align:'center', editable : true},
+		    {name:'useYn',      index:'useYn',      width: '10%', align:'center', editable : true,  edittype:'select', editoptions: {value:'Y:Y;N:N'}},
+		    {name:'regUser',    index:'regUser',    width: '20%', align:'center', editable : true}
+		];
 		$("#list").jqGrid({
-			url: "/grid.do",
-			datatype: "json",
+			url: "/grid2.do",
+			datatype : "json",
+			mtype: 'get',
 		   	colNames:searchResultColNames,
 		   	colModel:searchResultColModel,
 		    caption:"JSON Example",
@@ -163,16 +156,20 @@
             width: 1000,
             editurl: "/oper.do", // 셀 수정 요청 보낼 컨트롤러
 	        cellEdit:false,
-            loadonce: true,
             cellsubmit:'remote',
             cellurl:'/grid.do', // 셀이 수정된 후 이동할 url
-            
-            loadComplete: function(data){
-            	$("#next_pager").html("<i class='fas fa-angle-right'></i>");
-            	$("#last_pager").html("<i class='fas fa-angle-double-right'></i>");
-            	$("#prev_pager").html("<i class='fas fa-angle-left'></i>");
-            	$("#first_pager").html("<i class='fas fa-angle-double-left'></i>");
+            ondblClickRow: function(rowid, iRow, iCol){
+            	console.log(rowid);
+            	document.listForm.selectedId.value = rowid;
+            	document.listForm.action = "<c:url value='/updateSampleView.do'/>";
+            	document.listForm.submit();
             },
+//             loadComplete: function(data){
+//             	$("#next_pager").html("<i class='fas fa-angle-right'></i>");
+//             	$("#last_pager").html("<i class='fas fa-angle-double-right'></i>");
+//             	$("#prev_pager").html("<i class='fas fa-angle-left'></i>");
+//             	$("#first_pager").html("<i class='fas fa-angle-double-left'></i>");
+//             },
             //그리드 수정시 submit 후
             afterSubmitCell : function(res) {    
                 var aResult = $.parseJSON(res.responseText);
@@ -182,25 +179,16 @@
                     alert(userMsg);
                 }
                 return [(aResult.jqResult == "1") ? true : false, userMsg];
- 			},
- 			// 그리드가 완전히 모든 작업을 완료한 후 발생하는 이벤트
- 			gridComplete : function(){            
-				
  			}
-		});
-		
-		
-		$('#list').jqGrid('navGrid', '#pager', { edit: true, add: true, del: true,search : false},
-		    //edit options
-		    { url: '/updateSample.do' },
-		    //add options
-		    { url: '/home1/AddUserData' },
-		    //delete options
-		    { url: '/deleteSample.do' }
-		);
-		
-
-	});
+		}).navGrid('#pager', { edit: true, add: true, del: true,search : false},
+			    //edit options
+			    { url: '/updateSample.do' },
+			    //add options
+			    { url: '/addSample.do' },
+			    //delete options
+			    { url: '/deleteSample.do' }
+			);
+	}).trigger('reloadGrid');
 		
 	</script>
 </body>
