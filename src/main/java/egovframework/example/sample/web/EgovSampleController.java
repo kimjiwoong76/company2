@@ -117,8 +117,56 @@ public class EgovSampleController {
 	
 	@RequestMapping(value = "/grid3.do")
 	@ResponseBody
-	public JSONObject grid3(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO, HttpServletResponse response) throws Exception{
+	public JSONObject grid3(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model, HttpServletRequest req, SampleVO sampleVO, HttpServletResponse response, @RequestParam(value="page", required=false, defaultValue="1") int page, @RequestParam(value="rows", defaultValue="10") int rows) throws Exception{
 		
+		
+		
+		
+		int totalCnt =  sampleService.selectSampleListTotCnt(searchVO);
+		int record = sampleService.selectRecord();
+		int pageIndex = page;
+		int lastRecord = rows;
+		//** pageing setting *//*
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(pageIndex);
+		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
+		paginationInfo.setPageSize(searchVO.getPageSize());
+
+		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex() + 1);
+		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		
+		List<?> sampleList = sampleService.selectSampleList2(searchVO);
+		JSONObject jsonObject = new JSONObject();
+		JSONArray cell = new JSONArray();
+		SampleVO sampleData = null;
+		
+		for(int i=0; i<sampleList.size(); i++) {
+			sampleData = (SampleVO) sampleList.get(i);
+			JSONObject obj = new JSONObject();
+			obj.put("id", sampleData.getId());
+			obj.put("name", sampleData.getName());
+			obj.put("description", sampleData.getDescription());
+			obj.put("useYn", sampleData.getUse_yn());
+			obj.put("regUser", sampleData.getReg_user());
+			cell.add(obj);			
+		}
+		
+		
+		
+		jsonObject.put("total", record);
+		jsonObject.put("page", pageIndex);
+		jsonObject.put("records", totalCnt);
+		jsonObject.put("rows", cell);
+        System.out.println("### jsonObject : "+jsonObject);
+		
+		return jsonObject;
+		
+	}
+	
+	@RequestMapping("oper.do")
+	public String oper(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status, HttpServletRequest req)
+			throws Exception {
 		Enumeration params = req.getParameterNames();
 		System.out.println("----------------------------");
 		while (params.hasMoreElements()){
@@ -126,37 +174,29 @@ public class EgovSampleController {
 		    System.out.println(name + " : " +req.getParameter(name));
 		}
 		System.out.println("----------------------------");
-		
-		int totalCnt =  sampleService.selectSampleListTotCnt(searchVO);;
-		List<?> sampleList = sampleService.selectSampleList2(sampleVO);
-		JSONObject jsonObject = new JSONObject();
-		JSONArray cell = new JSONArray();
-		SampleVO sampleData = null;
-		
-		for(int i=0; i<sampleList.size(); i++) {
-			System.out.println("sampleList = " + sampleList.get(i));
-			sampleData = (SampleVO) sampleList.get(i);
-			JSONObject obj = new JSONObject();
-			obj.put("id", sampleData.getId());
-			obj.put("name", sampleData.getName());
-			obj.put("description", sampleData.getDescription());
-			obj.put("useYn", sampleData.getUseYn());
-			System.out.println(sampleData.getUseYn());
-			obj.put("regUser", sampleData.getRegUser());
-			System.out.println(sampleData.getRegUser());
-			cell.add(obj);			
-			
+		System.out.println(req.getParameter("oper"));
+		String oper = req.getParameter("oper");
+		if(oper.equals("del")) {
+			System.out.println("delete");
+			sampleService.deleteSample(sampleVO);
+			status.setComplete();
+		} else if(oper.equals("edit")){
+			beanValidator.validate(sampleVO, bindingResult);
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("sampleVO", sampleVO);
+			}
+			sampleService.updateSample(sampleVO);
+			status.setComplete();
+		} else {
+			// Server-Side Validation
+			beanValidator.validate(sampleVO, bindingResult);
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("sampleVO", sampleVO);
+			}
+			sampleService.insertSample(sampleVO);
+			status.setComplete();
 		}
-		
-		
-		jsonObject.put("total", totalCnt);
-		jsonObject.put("page", "1");
-		jsonObject.put("records", "10");
-		jsonObject.put("rows", cell);
-        System.out.println("### jsonObject : "+jsonObject);
-		
-		return jsonObject;
-		
+		return "forward:/test.do";
 	}
 		
 	
@@ -304,9 +344,22 @@ public class EgovSampleController {
 	 * @exception Exception
 	 */
 	@RequestMapping("/deleteSample.do")
-	public String deleteSample(SampleVO sampleVO, @ModelAttribute("searchVO") SampleDefaultVO searchVO, SessionStatus status) throws Exception {
-		sampleService.deleteSample(sampleVO);
-		status.setComplete();
+	public String deleteSample(SampleVO sampleVO, @ModelAttribute("searchVO") SampleDefaultVO searchVO, SessionStatus status, HttpServletRequest req) throws Exception {
+		Enumeration params = req.getParameterNames();
+		System.out.println("----------------------------");
+		while (params.hasMoreElements()){
+		    String name = (String)params.nextElement();
+		    System.out.println(name + " : " +req.getParameter(name));
+		}
+		if(req.getParameter("oper") == null) {
+			System.out.println("----------------------------");
+			sampleService.deleteSample(sampleVO);
+			status.setComplete();
+		} else {
+			
+		}
+		
+		
 		return "forward:/egovSampleList.do";
 	}
 	
@@ -340,30 +393,7 @@ public class EgovSampleController {
 	}
 	
 	
-	@RequestMapping("oper.do")
-	public String oper(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status, HttpServletRequest req)
-			throws Exception {
-		System.out.println(req.getParameter("oper"));
-		String oper = req.getParameter("oper");
-		if(oper.equals("del")) {
-			System.out.println("delete");
-			sampleService.deleteSample(sampleVO);
-			status.setComplete();
-			return "forward:/egovSampleList.do";
-		} else {
-			System.out.println("update");
-			beanValidator.validate(sampleVO, bindingResult);
 
-			if (bindingResult.hasErrors()) {
-				model.addAttribute("sampleVO", sampleVO);
-				return "sample/egovSampleRegister";
-			}
-
-			sampleService.updateSample(sampleVO);
-			status.setComplete();
-			return "forward:/egovSampleList.do";
-		}
-	}
 	
 
 }

@@ -43,6 +43,8 @@ public class SampleVO extends SampleDefaultVO {
 	private String description;
 	private String useYn;
 	private String regUser;
+	private String use_yn;
+	private String reg_user;
 	private Date reg_date;
 	private int c_rap;
 	private String c_tub_type;
@@ -62,7 +64,18 @@ public class SampleVO extends SampleDefaultVO {
 	private int page;
 	
 	
-	
+	public String getUse_yn() {
+		return use_yn;
+	}
+	public void setUse_yn(String use_yn) {
+		this.use_yn = use_yn;
+	}
+	public String getReg_user() {
+		return reg_user;
+	}
+	public void setReg_user(String reg_user) {
+		this.reg_user = reg_user;
+	}
 	public int getRows() {
 		return rows;
 	}

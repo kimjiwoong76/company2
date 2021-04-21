@@ -143,7 +143,7 @@
 		    {name:'regUser',    index:'regUser',    width: '20%', align:'center', editable : true}
 		];
 		$("#list").jqGrid({
-			url: "/grid2.do",
+			url: "/grid3.do",
 			datatype : "json",
 			mtype: 'get',
 		   	colNames:searchResultColNames,
@@ -154,6 +154,7 @@
             viewrecords: true, // 그리드가 보여줄 총 페이지 현재 페이지등의 정보를 노출 ex) 보기 1-10 / 33
             height:300,
             width: 1000,
+            multiselect: true,
             editurl: "/oper.do", // 셀 수정 요청 보낼 컨트롤러
 	        cellEdit:false,
             cellsubmit:'remote',

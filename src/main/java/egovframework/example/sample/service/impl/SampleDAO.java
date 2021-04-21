@@ -128,4 +128,8 @@ public class SampleDAO extends EgovAbstractDAO {
 		delete("sampleDAO.deleteSample2", hm);
 	}
 
+	public int selectRecord() {
+		return (int) select("sampleDAO.selectRecord");
+	}
+
 }

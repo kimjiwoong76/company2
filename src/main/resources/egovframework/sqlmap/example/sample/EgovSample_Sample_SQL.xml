@@ -77,10 +77,21 @@
     <select id="sampleDAO.selectSampleList2" parameterClass="searchVO" resultClass="sampleVO">
 			
 				
-			             SELECT       *
+			            SELECT
+			    *
+			FROM
+			    (
+			        SELECT
+			            A.*,
+			            <!-- ROWNUM number 붙여주는 키가 -->
+			            ROWNUM AS RNUM
+			        FROM
+			            (
+			                SELECT
+			                    *
 			                FROM
-			                    SAMPLE where 1=1
-			                     <isEqual prepend="AND" property="searchCondition" compareValue="0">
+			                    SAMPLE WHERE 1=1 
+			                    <isEqual prepend="AND" property="searchCondition" compareValue="0">
 									DESCRIPTION LIKE '%' || #searchKeyword# || '%'
 								</isEqual>
 								<isEqual prepend="AND" property="searchCondition" compareValue="1">
@@ -88,6 +99,10 @@
 								</isEqual>
 			                ORDER BY
 			                    ID DESC
+			            ) A
+			    )
+			
+			<![CDATA[where RNUM >= #firstIndex# AND RNUM <= #lastIndex# ]]>
 	
 			
 	</select>
@@ -138,7 +153,10 @@
 	</select>
 	
 	<select id="sampleDAO.getCount" parameterClass="searchVO" resultClass="int">
-			SELECT COUNT(*) totalCnt, CEIL(count(*)/10) totalPage from sample
+			SELECT COUNT(*) totalCnt from sample
+	</select>
+	<select id="sampleDAO.selectRecord" resultClass="int">
+			SELECT CEIL(count(*)/10) totalPage from sample
 	</select>
 	
 
