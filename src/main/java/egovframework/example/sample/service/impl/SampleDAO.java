@@ -131,5 +131,8 @@ public class SampleDAO extends EgovAbstractDAO {
 	public int selectRecord() {
 		return (int) select("sampleDAO.selectRecord");
 	}
+	public void deleteSample3(HashMap<String, Object> hm) {
+		delete("sampleDAO.deleteSample3", hm);
+	}
 
 }

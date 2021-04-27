@@ -62,6 +62,18 @@
 		</isNotEmpty>
 	</delete>
 	
+	<delete id="sampleDAO.deleteSample3" >
+		<![CDATA[
+			DELETE FROM SAMPLE WHERE ID
+		]]>
+		<isNotEmpty property="hm">
+			<iterate prepend="IN" open="(" close=")" conjunction="," property="hm">
+			 #hm[]#
+			</iterate>
+		</isNotEmpty>
+	</delete>
+	
+	
     
     <select id="sampleDAO.selectSample" resultMap="sample">
         <![CDATA[

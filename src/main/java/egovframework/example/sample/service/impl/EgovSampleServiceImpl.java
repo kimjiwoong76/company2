@@ -174,6 +174,11 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 		return sampleDAO.selectRecord();
 	}
 
+	@Override
+	public void deleteSample3(HashMap<String, Object> hm) {
+		sampleDAO.deleteSample3(hm);	
+	}
+
 	
 
 }

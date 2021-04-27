@@ -164,6 +164,34 @@ public class EgovSampleController {
 		
 	}
 	
+	@RequestMapping("/gridDelete.do")
+	public String gridDelete(SampleVO sampleVO, @ModelAttribute("searchVO") SampleDefaultVO searchVO, SessionStatus status, HttpServletRequest req) {
+		Enumeration params = req.getParameterNames();
+		System.out.println("----------------------------");
+		while (params.hasMoreElements()){
+		    String name = (String)params.nextElement();
+		    System.out.println(name + " : " +req.getParameter(name));
+		}
+		System.out.println("----------------------------");
+		
+		String id = req.getParameter("id");
+		
+		String[] ids = id.split(",");
+		
+		HashMap<String, Object> hm = new HashMap<>();
+		hm.put("hm", ids);
+		
+		try {
+			sampleService.deleteSample3(hm);
+		} catch(Exception e) {
+			e.printStackTrace();
+			logger.info(e.getMessage());
+		}
+		
+		return "forward:/test.do";
+		
+	}
+	
 	@RequestMapping("oper.do")
 	public String oper(@ModelAttribute("searchVO") SampleDefaultVO searchVO, SampleVO sampleVO, BindingResult bindingResult, Model model, SessionStatus status, HttpServletRequest req)
 			throws Exception {

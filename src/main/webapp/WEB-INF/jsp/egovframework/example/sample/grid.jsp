@@ -80,6 +80,7 @@
         	</div>
 		<table id="list"></table>
 		<div id="pager"></div>
+		<div id="pageCustom"></div>
 		</form:form>
 	</div>
 	<script>
@@ -171,6 +172,12 @@
 //             	$("#prev_pager").html("<i class='fas fa-angle-left'></i>");
 //             	$("#first_pager").html("<i class='fas fa-angle-double-left'></i>");
 //             },
+            loadComplete: function(data){
+        		// 현재 표시 되고 있는 갯수를 가져옴('getGridParam', 'records')는 필수
+        		var rowGrid = $("#list").jqGrid('getGridParam', 'records');
+            	console.log(data);
+              	initPage("list", rowGrid, "");
+          	},
             //그리드 수정시 submit 후
             afterSubmitCell : function(res) {    
                 var aResult = $.parseJSON(res.responseText);
@@ -187,9 +194,118 @@
 			    //add options
 			    { url: '/addSample.do' },
 			    //delete options
-			    { url: '/deleteSample.do' }
+			    { url: '/gridDelete.do' }
 			);
 	}).trigger('reloadGrid');
+	
+	
+	// 그리드 첫페이지로 이동
+	function firstPage(){
+		$("#list").jqGrid('setGridParam',{
+			page:1
+		}).trigger("reloadGrid");
+	}
+	
+	// 그리드 이전 페이지로 이동
+	function prePage(totalSize){
+		var currentPage = $("#list").getGridParam('page');
+		var pageCount = 10;
+		
+		currentPage-=pageCount;
+		pageList = Math.ceil(currentPage/pageCount);
+		currentPage = (pageList-1)*pageCount+pageCount;
+		
+		initPage("list", totalSize, currentPage);
+		
+		$("#list").jqGrid('setGridParam',{
+			page:currentPage
+		}).trigger("reloadGrid");
+	}
+	
+	// 그리드 다음페이지 이동
+	function nextPage(totalSize){
+		var currentPage = $("#list").getGridParam('page');
+		var pageCount = 10;
+		
+		currentPage+=pageCount;
+		pageList = Math.ceil(currentPage/pageCount);
+		currentPage = (pageList-1)*pageCount+1;
+		initPage("list", totalSize, currentPage);
+		
+		$("#list").jqGrid('setGridParam',{
+			page:currentPage
+		}).trigger("reloadGrid");
+	}
+	
+	// 마지막페이지로 이동
+	function lastPage(totalSize){
+		$("#list").jqGrid('setGridParam',{
+			page:totalSize
+		}).trigger("reloadGrid");
+	}
+
+<!-- 그리드 페이징 시작 -->
+	function goPage(num){
+		$("#list").jqGrid('setGridParam',{
+			page:num
+		}).trigger("reloadGrid");
+	}
+	// 페이징을 위한 함수
+	// 변수로 그리드아이디, 총 데이터 수 , 현재 페이지 받음
+	function initPage(gridId, totalSize, currentPage){
+		
+		if(currentPage == ""){
+			var currentPage = $("#" + gridId).getGridParam('page');
+			console.log("currentPage " + currentPage);
+		}
+		
+		// 한 페이지에 보여줄 페이지 수 (ex 1 2 3 4 5)
+		var pageCount= 10;
+		
+		// 그리드 데이터 전체의 페이지 수
+		var totalPage = Math.ceil(totalSize/$("#"+gridId).getGridParam('rowNum'));
+		
+		// 전체 페이지 수를 한화면에 보여줄 페이지로 나눈다.
+		var totalPageList = Math.ceil(totalPage/pageCount);
+		
+		// 페이지 리스트가 몇번째 리스트인지
+		var pageList = Math.ceil(currentPage/pageCount);
+		
+		// 페이지 리스트가 1보다 작으면 1로 초기화
+		if(pageList<1) pageList=1;
+		
+		// 페이지 리스트가 총 페이지 리스트보다 커지면 총 페이지 리스트로 설정
+		if(pageList>totalPageList) pageList = totalPageList;
+		
+		// 시작 페이지
+		var startPageList = ((pageList-1)*pageCount)+1;
+		
+		var endPageList = startPageList+pageCount-1;
+		
+		if(startPageList<1) startPageList=1;
+		if(endPageList>totalPage) endPageList=totalPage;
+		if(endPageList<1) endPageList=1;
+		
+		var pageInner = "";
+		// 페이지 숫자를 찍으며 태그생성 (현재페이지는 강조태그)
+		for(var i=startPageList; i<=endPageList; i++){
+			if(i==currentPage){
+				pageInner = pageInner + "<a href='javascript:goPage("+(i)+")' id='"+(i)+"'><strong>"+(i)+"</strong></a>";
+			} else {
+				pageInner = pageInner + "<a href='javascript:goPage("+(i)+")' id='"+(i)+"'>"+(i)+"</a>";
+			}
+		}
+		
+		// 다음 페이지 리스트가 있을 경우
+		if(totalPageList > pageList){
+			pageInner += pageInner + "<a href='javascript:goPage("+totalSize+")'>&rt;</a>";
+			pageInner += pageInner + "<a href='javascript:goPage("+totalPage+")'>&rt;&rt;</a>";
+		}
+		
+		$("#pageCustom").html("");
+		$("#pageCustom").append(pageInner);
+		
+	}
 		
 	</script>
 </body>
